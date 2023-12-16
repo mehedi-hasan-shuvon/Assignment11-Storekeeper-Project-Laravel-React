@@ -33,6 +33,10 @@ Route::get('/userCom', function () {
     return Inertia::render('Users/UserCom');
 })->middleware(['auth', 'verified'])->name('userCom');
 
+Route::get('/categories', function () {
+    return Inertia::render('Products/Categories');
+})->middleware(['auth', 'verified'])->name('categories');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

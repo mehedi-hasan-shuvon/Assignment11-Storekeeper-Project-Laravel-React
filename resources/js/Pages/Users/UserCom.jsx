@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 
-const UserCom = ({ auth, mustVerifyEmail, status }) => {
+const UserCom = ({ auth}) => {
 
 
 	useEffect(() => {

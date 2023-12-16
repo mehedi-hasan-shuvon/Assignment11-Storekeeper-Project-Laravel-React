@@ -5,7 +5,7 @@ import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCoffee, faBars, faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
+import { faCoffee, faBars, faAngleDown, faAngleUp, faFolderTree } from '@fortawesome/free-solid-svg-icons';
 
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(true);
@@ -47,6 +47,12 @@ export default function Authenticated({ user, header, children }) {
                             <NavLink href={route('userCom')} active={route().current('userCom')}>
                                 <FontAwesomeIcon icon={faCoffee} />
                                 <p className='px-2 text-lg'>UserCom</p>
+                            </NavLink>
+                        </li>
+                        <li className='px-4 py-2'>
+                            <NavLink href={route('categories')} active={route().current('categories')}>
+                                <FontAwesomeIcon icon={faFolderTree} />
+                                <p className='px-2 text-lg'>Categories</p>
                             </NavLink>
                         </li>
                         {/* Add more sidebar links as needed */}
