@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ProductAddModal from '@/Components/Product/ProductAddModal';
 import ProductEditModal from '@/Components/Product/ProductEditModal';
 import DeleteModal from '@/Components/DeleteModal';
+import { formatToBanglaNumber } from '@/Components/CommonFunctions';
 
 const Products = ({ auth }) => {
 
@@ -168,7 +169,7 @@ const Products = ({ auth }) => {
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
 							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">image</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">name</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">price</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">price (BDT)</th>
 							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
 							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
 							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
@@ -185,7 +186,7 @@ const Products = ({ auth }) => {
 							  </td>
 
                               <td className="px-6 py-4 whitespace-nowrap">{product.name}</td>
-							  <td className="px-6 py-4 whitespace-nowrap">{product.price}</td>
+							  <td className="px-6 py-4 whitespace-nowrap">{formatToBanglaNumber(product.price)} </td>
 							  <td className="px-6 py-4 whitespace-nowrap">{product.unit}</td>
 							  <td className="px-6 py-4 whitespace-nowrap">{product.category_name}</td>
                               <td className="px-6 py-4 whitespace-nowrap">{moment(product.created_at).format('MMMM Do YYYY, h:mm:ss a')}</td>

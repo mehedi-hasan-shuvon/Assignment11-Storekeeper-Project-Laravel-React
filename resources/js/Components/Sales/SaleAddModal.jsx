@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBan, faClose, faPrint } from '@fortawesome/free-solid-svg-icons';
 import { useReactToPrint } from 'react-to-print';
 import moment from 'moment';
+import { formatToBanglaNumber } from '../CommonFunctions';
 
 const SaleAddModal = ({ show, toggleModal, sale, auth }) => {
 	const [saleDetails, setSaleDetails] = useState([]);
@@ -34,7 +35,6 @@ const SaleAddModal = ({ show, toggleModal, sale, auth }) => {
 		}
 	}, [show]);
 
-	console.log(saleDetails);
 
 	return (
 		<>
@@ -79,14 +79,11 @@ const SaleAddModal = ({ show, toggleModal, sale, auth }) => {
 											<span className="font-semibold">Customer Phone:</span> {sale.customer_phone}
 										</p>
 										<p>
-											<span className="font-semibold">Total Price:</span> {sale.total} TK
+											<span className="font-semibold">Total Price:</span> {formatToBanglaNumber(sale.total)} BDT
 										</p>
 									</div>
 
-									<h3 className="text-lg font-semibold mb-2 text-center">Product Details</h3>
-									<hr />
 
-									{/* Add product details */}
 
 								</div>
 
@@ -105,8 +102,8 @@ const SaleAddModal = ({ show, toggleModal, sale, auth }) => {
 															<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
 															<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product Name</th>
 															<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product Unit</th>
-															<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product Unit Price</th>
-															<th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Product Unit Price</th>
+															<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product Unit Price (BDT)</th>
+															<th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Product Unit Price (BDT)</th>
 
 
 
@@ -119,8 +116,8 @@ const SaleAddModal = ({ show, toggleModal, sale, auth }) => {
 
 																<td className="px-6 py-4 whitespace-nowrap">{saleDetail.product_name}</td>
 																<td className="px-6 py-4 whitespace-nowrap">{saleDetail.qty}</td>
-																<td className="px-6 py-4  whitespace-nowrap">{saleDetail.sale_price} </td>
-																<td className="px-6 py-4 text-right whitespace-nowrap">{saleDetail.sale_price * saleDetail.qty} TK</td>
+																<td className="px-6 py-4  whitespace-nowrap">{formatToBanglaNumber(saleDetail.sale_price)} </td>
+																<td className="px-6 py-4 text-right whitespace-nowrap">{formatToBanglaNumber(saleDetail.sale_price * saleDetail.qty)} </td>
 
 
 
@@ -133,11 +130,11 @@ const SaleAddModal = ({ show, toggleModal, sale, auth }) => {
 															</td>
 															<td className="px-6 py-4 text-right font-semibold">
 																{/* Calculate total */}
-																{saleDetails.reduce(
+																{formatToBanglaNumber(saleDetails.reduce(
 																	(total, saleDetail) =>
 																		total + parseFloat(saleDetail.sale_price) * parseFloat(saleDetail.qty),
 																	0
-																)} TK
+																))} 
 															</td>
 														</tr>
 														<tr>
@@ -164,7 +161,7 @@ const SaleAddModal = ({ show, toggleModal, sale, auth }) => {
 															</td>
 															<td className="px-6 py-4 text-right font-semibold">
 
-																{sale.total} TK
+																{formatToBanglaNumber(sale.total)} BDT
 															</td>
 														</tr>
 

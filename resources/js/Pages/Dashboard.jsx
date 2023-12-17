@@ -1,13 +1,76 @@
+import { formatToBanglaNumber } from '@/Components/CommonFunctions';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
+import moment from 'moment';
+import { useEffect, useState } from 'react';
+import Chart from 'react-apexcharts';
 
 export default function Dashboard({ auth }) {
-    const salesData = [
-        { title: "Today", count: 1 },
-        { title: "Yesterday", count: 2 },
-        { title: "This Month", count: 3 },
-        { title: "Last Month", count: 4 },
-    ];
+
+    const [salesStats, setSalesStats] = useState([{ title: "Today", count: 0 },
+    { title: "Yesterday", count: 0 },
+    { title: "This Month", count: 0 },
+    { title: "Last Month", count: 0 }]);
+
+    const [chartData, setChartData] = useState([]);
+    const fetchSalesStats = async () => {
+
+        try {
+            const response = await axios.get(`/api/getSalesStats/${auth?.user?.id}`);
+            // setSalesStats(response?.data);
+            console.log(response?.data);
+            setSalesStats([
+                { title: "Today", count: response?.data?.todaySalesTotal },
+                { title: "Yesterday", count: response?.data?.yesterdaySalesTotal },
+                { title: "This Month", count: response?.data?.thisMonthsSalesTotal },
+                { title: "Last Month", count: response?.data?.lastMonthsSalesTotal },
+            ])
+
+        } catch (error) {
+            console.error('Error fetching sales stats:', error);
+        }
+    }
+
+    const fetchMonthlySales = async () => {
+        try {
+
+            const response = await axios.get(`/api/getMonthlySales/${auth?.user?.id}`);
+
+            setChartData(response?.data);
+
+        } catch (error) {
+            console.error('Error fetching monthly sales:', error);
+        }
+
+    }
+
+
+    useEffect(() => {
+
+        const fetchData = async () => {
+            await Promise.all([fetchSalesStats(), fetchMonthlySales()]);
+          };
+
+        fetchData();
+    }, []);
+
+    const options = {
+        chart: {
+            id: 'monthly-sales-chart',
+        },
+        xaxis: {
+            type: 'Date',
+            categories: chartData.map(data => ` ${moment(data.sales_date).format('MMM Do')}`), // Assuming 'day' is the day number in data
+        },
+    };
+
+    const series = [
+        {
+            name: 'Sales',
+            data: chartData.map(data => data.total_sales),
+        },
+    ]
+
 
     return (
         <AuthenticatedLayout
@@ -20,7 +83,7 @@ export default function Dashboard({ auth }) {
 
             <div className="py-2">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {salesData.map((data, index) => (
+                    {salesStats.map((data, index) => (
                         <SalesCard key={index} title={data.title} count={data.count} />
                     ))}
                 </div>
@@ -29,7 +92,17 @@ export default function Dashboard({ auth }) {
             <div className="py-2">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900">You're logged in!</div>
+
+                        {/* chart section here */}
+                            {
+                                chartData.length === 0 ? (
+                                    <p>No data available</p>
+                                ) : (
+                                    <Chart options={options} series={series} type="line" height={350} />
+                                )
+                            }
+                           
+                        
                     </div>
                 </div>
             </div>
@@ -51,7 +124,9 @@ const SalesCard = ({ title, count }) => {
     return (
         <div className={`overflow-hidden shadow-sm sm:rounded-lg p-6 m-4 ${color}`}>
             <h3 className="text-lg font-semibold">{title}</h3>
-            <p className="text-3xl font-bold">{count}</p>
+            <p className="text-3xl font-bold">{formatToBanglaNumber(count)} BDT</p>
         </div>
     );
 };
+
+

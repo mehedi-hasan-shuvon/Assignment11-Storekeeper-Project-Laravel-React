@@ -52,4 +52,7 @@ Route::get('/getSales/{id}',[SaleController::class,'getSales']);
 
 Route::get('/getSaleDetails/{id}',[SaleController::class,'getSaleDetails']);
 
+Route::get('/getSalesStats/{id}',[SaleController::class,'getSalesStats']);
 
+
+Route::get('/getMonthlySales/{id}',[SaleController::class,'getMonthlySales']);

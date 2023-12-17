@@ -141,8 +141,69 @@ class SaleController extends Controller
 
         return $result;
 
+    }
 
-      
+    function getSalesStats (Request $request){
+
+        $userId = $request->id;
+
+        $todaySalesTotal = DB::table('invoices')
+            ->where('user_id', $userId)
+            ->whereDate('created_at', today())
+            ->sum('total');
+
+        // yesterday sale
+
+        $yesterdaySalesTotal = DB::table('invoices')
+            ->where('user_id', $userId)
+            ->whereDate('created_at', today()->subDay())
+            ->sum('total');
+        
+        // This months sale
+
+        $thisMonthsSalesTotal = DB::table('invoices')
+            ->where('user_id', $userId)
+            ->whereMonth('created_at', today()->month)
+            ->sum('total');
+        
+        // Last months sale
+
+        $lastMonthsSalesTotal = DB::table('invoices')
+            ->where('user_id', $userId)
+            ->whereMonth('created_at', today()->subMonth()->month)
+            ->sum('total');
+
+       $data =  [
+            'todaySalesTotal' => $todaySalesTotal,
+            'yesterdaySalesTotal' => $yesterdaySalesTotal,
+            'thisMonthsSalesTotal' => $thisMonthsSalesTotal,
+            'lastMonthsSalesTotal' => $lastMonthsSalesTotal
+        ];
+
+        return $data;
+
+        
+    }
+
+    function getMonthlySales (Request $request){
+
+        $userId = $request->id;
+
+        $currentYear = date('Y');
+        $currentMonth = date('m');
+    
+        $monthlySales = DB::table('invoices')
+            ->select(
+                DB::raw('DATE(created_at) AS sales_date'),
+                DB::raw('SUM(total) AS total_sales')
+            )
+            ->where('user_id', $userId)
+            ->whereYear('created_at', $currentYear)
+            ->whereMonth('created_at', $currentMonth)
+            ->groupBy(DB::raw('DATE(created_at)'))
+            ->get();
+    
+        return response()->json($monthlySales);
 
     }
 

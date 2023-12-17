@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAdd, faAngleLeft, faAngleRight, faBan, faPen, faTrash, faCartPlus, faEye } from '@fortawesome/free-solid-svg-icons';
 import SaleAddModal from '@/Components/Sales/SaleAddModal';
 import NavLink from '@/Components/NavLink';
+import { formatToBanglaNumber } from '@/Components/CommonFunctions';
 
 
 const Sales = ({ auth }) => {
@@ -102,7 +103,7 @@ const Sales = ({ auth }) => {
 							
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>						
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone number</th>
-							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total price</th>
+							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total price (BDT)</th>
 							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
 
                             <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
@@ -114,7 +115,7 @@ const Sales = ({ auth }) => {
                               <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
                               <td className="px-6 py-4 whitespace-nowrap">{sale.customer_name}</td>
 							  <td className="px-6 py-4 whitespace-nowrap">{sale.customer_phone}</td>
-							  <td className="px-6 py-4 whitespace-nowrap">{sale.total}</td>
+							  <td className="px-6 py-4 whitespace-nowrap">{formatToBanglaNumber(sale.total)}</td>
                               <td className="px-6 py-4 whitespace-nowrap">{moment(sale.created_at).format('MMMM Do YYYY, h:mm:ss a')}</td>
                               <td className="px-6 py-4 text-right whitespace-nowrap">
                                 <button onClick={() => handelSalesShowModal(sale)} className="text-blue-500 mr-2 px-2"><FontAwesomeIcon icon={faEye} /></button>
