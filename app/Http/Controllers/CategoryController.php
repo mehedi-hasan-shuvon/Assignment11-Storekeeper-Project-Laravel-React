@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller {
     //
-    function getAllCategories( Request $request ) {
+    function getCategories( Request $request ) {
         $id = $request->id;
 
         // get all the categories of user_id = $id
@@ -36,6 +36,15 @@ class CategoryController extends Controller {
         ];
         
 
+    }
+
+    function getAllCategories( Request $request ) {
+
+        $id = $request->id;
+
+        $result = DB::table( 'categories' )->where( 'user_id', $id )->get();
+
+        return $result;
     }
 
     function deleteCategory( Request $request ) {

@@ -36,11 +36,9 @@ const Categories = ({ auth }) => {
     try {
       setIsLoading(true);
       // const response = await axios.get(`/api/getAllCategories/${auth?.user?.id}`); 
-      const response = await axios.get(`/api/getAllCategories/${auth?.user?.id}`, {
+      const response = await axios.get(`/api/getCategories/${auth?.user?.id}`, {
         params: { page },
       });
-
-      response
       setCategories(response?.data?.data);
       setTotalPages(response?.data?.totalPages);
       setIsLoading(false);
@@ -80,7 +78,7 @@ const Categories = ({ auth }) => {
   const handleEditCategory = async (newCategoryName) => {
     try {
       const response = await axios.post(`/api/editCategory/${selectedCategory?.id}`, { name: newCategoryName });
-      console.log(response);
+
       if (response?.status === 200) {
         setShowEditModal(false);
         fetchCategories(currentPage);
@@ -97,7 +95,7 @@ const Categories = ({ auth }) => {
   const handleAddCategory = async (newCategoryName) => {
     try {
       const response = await axios.post(`/api/addCategory/${auth?.user?.id}`, { name: newCategoryName });
-      console.log(response);
+
       if (response?.status === 200) {
         setShowAddModal(false);
         fetchCategories();
@@ -122,13 +120,14 @@ const Categories = ({ auth }) => {
   };
 
 
+
   return (
 
     <AuthenticatedLayout
       user={auth.user}
       header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Categories</h2>}
     >
-      <Head title="Users" />
+      <Head title="Categories" />
 
       <ToastContainer position="top-right"
         autoClose={5000}
