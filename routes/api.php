@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SaleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
@@ -39,6 +40,16 @@ Route::post('/addProduct/{id}',[ProductController::class,'addProduct']);
 
 Route::get('/getProducts/{id}',[ProductController::class,'getProducts']);
 
+Route::get('/getAllProducts/{id}',[ProductController::class,'getAllProducts']);
+
 Route::post('/editProduct/{id}',[ProductController::class,'editProduct']);
 
 Route::delete('/deleteProduct/{id}',[ProductController::class,'deleteProduct']);
+
+Route::post('/saveSales/{id}',[SaleController::class,'addSale']);
+
+Route::get('/getSales/{id}',[SaleController::class,'getSales']);
+
+Route::get('/getSaleDetails/{id}',[SaleController::class,'getSaleDetails']);
+
+

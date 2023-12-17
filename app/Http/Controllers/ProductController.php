@@ -86,6 +86,22 @@ class ProductController extends Controller
 
     }
 
+
+    function getAllProducts (Request $request){
+
+        $id = $request->id;
+
+        //and where unit > 0
+        $result = DB::table('products')
+            ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->select('products.*', 'categories.name as category_name')
+            ->where('products.user_id', $id)
+            ->where('products.unit', '>', 0)
+            ->get();
+
+        return $result;
+    }
+
     function editProduct(Request $request){
 
         $id = $request->id;

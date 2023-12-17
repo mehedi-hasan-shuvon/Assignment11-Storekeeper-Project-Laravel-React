@@ -16,13 +16,17 @@ use Inertia\Inertia;
 |
 */
 
+// Route::get('/', function () {
+//     return Inertia::render('Welcome', [
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register'),
+//         'laravelVersion' => Application::VERSION,
+//         'phpVersion' => PHP_VERSION,
+//     ]);
+// });
+
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return redirect()->route('dashboard'); // Redirect to the 'dashboard' named route
 });
 
 Route::get('/dashboard', function () {
@@ -40,6 +44,14 @@ Route::get('/categories', function () {
 Route::get('/products', function () {
     return Inertia::render('Products/Products');
 })->middleware(['auth', 'verified'])->name('products');
+
+Route::get('/sales', function () {
+    return Inertia::render('Sales/Sales');
+})->middleware(['auth', 'verified'])->name('sales');
+
+Route::get('/createSales', function () {
+    return Inertia::render('Sales/CreateSales');
+})->middleware(['auth', 'verified'])->name('createSales');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
