@@ -16,6 +16,7 @@ return new class extends Migration
 
             $table->string('total',50);
             $table->string('discount',50);
+            $table->string('invoice_id',50);
             $table->string('vat',50);
             $table->unsignedBigInteger('user_id');
             $table->string('name');
