@@ -14,7 +14,7 @@ export default function Authenticated({ user, header, children }) {
     const [showResponsiveNav, setShowResponsiveNav] = useState(false);
 
     const toggleSubMenu = () => {
-        console.log('clicked');
+
         setShowSubMenu(prevState => !prevState);
     };
 
@@ -28,7 +28,7 @@ export default function Authenticated({ user, header, children }) {
             {/* Sidebar */}
             <div className="hidden sm:flex bg-white shadow h-full w-64 flex-col">
                 {/* Logo */}
-                <div className="flex items-center justify-center py-4 border-b border-gray-200">
+                <div  className="flex items-center justify-center py-4 border-b border-gray-200">
                     <Link href="/">
                         <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" />
                     </Link>

@@ -13,12 +13,13 @@ export default function Dashboard({ auth }) {
     { title: "Last Month", count: 0 }]);
 
     const [chartData, setChartData] = useState([]);
+    const [salesChartData, setSalesChartData] = useState([]);
     const fetchSalesStats = async () => {
 
         try {
             const response = await axios.get(`/api/getSalesStats/${auth?.user?.id}`);
             // setSalesStats(response?.data);
-            console.log(response?.data);
+
             setSalesStats([
                 { title: "Today", count: response?.data?.todaySalesTotal },
                 { title: "Yesterday", count: response?.data?.yesterdaySalesTotal },
@@ -36,7 +37,9 @@ export default function Dashboard({ auth }) {
 
             const response = await axios.get(`/api/getMonthlySales/${auth?.user?.id}`);
 
-            setChartData(response?.data);
+
+            setChartData(response?.data?.monthlySales);
+            setSalesChartData(response?.data?.productsSales);
 
         } catch (error) {
             console.error('Error fetching monthly sales:', error);
@@ -49,7 +52,7 @@ export default function Dashboard({ auth }) {
 
         const fetchData = async () => {
             await Promise.all([fetchSalesStats(), fetchMonthlySales()]);
-          };
+        };
 
         fetchData();
     }, []);
@@ -71,6 +74,18 @@ export default function Dashboard({ auth }) {
         },
     ]
 
+    const saleChartData = {
+        series: salesChartData.map((product) => product?.total_sales),
+        labels: salesChartData.map((product) => product?.product_name),
+    };
+
+    const salsesChartOptions = {
+        chart: {
+            type: 'pie',
+        },
+        labels: saleChartData.labels,
+    };
+
 
     return (
         <AuthenticatedLayout
@@ -90,22 +105,29 @@ export default function Dashboard({ auth }) {
             </div>
 
             <div className="py-2">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 grid grid-cols-12 gap-4">
+                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg col-span-7"> {/* Left Column */}
+                        {/* Chart section here */}
+                        {chartData.length === 0 ? (
+                            <p>No data available</p>
+                        ) : (
+                            <Chart options={options} series={series} type="line" height={350} />
+                        )}
+                    </div>
 
-                        {/* chart section here */}
-                            {
-                                chartData.length === 0 ? (
-                                    <p>No data available</p>
-                                ) : (
-                                    <Chart options={options} series={series} type="line" height={350} />
-                                )
-                            }
-                           
-                        
+                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg col-span-5"> {/* Right Column */}
+                        {/* Chart section here */}
+                        {chartData.length === 0 ? (
+                            <p>No data available</p>
+                        ) : (
+                            <Chart options={salsesChartOptions} series={saleChartData.series} type="pie" height={350} />
+                        )}
                     </div>
                 </div>
             </div>
+
+
+
         </AuthenticatedLayout>
     );
 }

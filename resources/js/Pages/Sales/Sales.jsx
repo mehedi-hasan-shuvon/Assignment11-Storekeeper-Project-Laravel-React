@@ -100,9 +100,8 @@ const Sales = ({ auth }) => {
                         <thead className="bg-gray-50">
                           <tr>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
-							
+							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Invoice ID</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>						
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone number</th>
 							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total price (BDT)</th>
 							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
 
@@ -113,8 +112,8 @@ const Sales = ({ auth }) => {
                           {sales.map((sale, index) => (
                             <tr key={sale.id}>
                               <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
+							  <td className="px-6 py-4 whitespace-nowrap">{sale.invoice_id} </td>
                               <td className="px-6 py-4 whitespace-nowrap">{sale.customer_name}</td>
-							  <td className="px-6 py-4 whitespace-nowrap">{sale.customer_phone}</td>
 							  <td className="px-6 py-4 whitespace-nowrap">{formatToBanglaNumber(sale.total)}</td>
                               <td className="px-6 py-4 whitespace-nowrap">{moment(sale.created_at).format('MMMM Do YYYY, h:mm:ss a')}</td>
                               <td className="px-6 py-4 text-right whitespace-nowrap">

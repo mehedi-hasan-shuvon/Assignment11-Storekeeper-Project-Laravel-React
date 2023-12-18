@@ -31,12 +31,12 @@ const CreateSales = ({ auth }) => {
 			console.log(data);
 			const response = await axios.post(`/api/saveSales/${auth?.user?.id}`, data);
 			console.log(response);
-			if(response.status === 200){
+			if (response.status === 200) {
 				toast("Sales added successfully!", { type: "success" });
 				setTimeout(() => {
 					Inertia.visit(route('sales'));
-				  }, 2000);
-			
+				}, 2000);
+
 			}
 		} catch (error) {
 			toast("Error adding sales!", { type: "error" });
@@ -154,7 +154,7 @@ const CreateSales = ({ auth }) => {
 									/>
 								</div>
 
-							
+
 
 
 								<table className="border-collapse w-full mb-4">
@@ -162,7 +162,8 @@ const CreateSales = ({ auth }) => {
 										<tr className="border-b">
 											<th className="text-left px-3 py-2">Product</th>
 											<th className="text-left px-3 py-2">Price</th>
-											<th className="text-left px-3 py-2">Stock</th>
+											<th className="text-left px-3 py-2">Stock Available</th>
+											<th className="text-left px-3 py-2">Unit</th>
 											<th className="px-3 py-2">Actions</th>
 										</tr>
 									</thead>
@@ -206,9 +207,20 @@ const CreateSales = ({ auth }) => {
 												</td>
 												<td className="px-3 py-2">
 													<input
+														readOnly
 														{...register(`products[${index}].stock`)}
 														defaultValue={field.stock}
-														placeholder="Stock"
+														placeholder="Stock Available"
+														type="number"
+														max={field.stock}
+														className="border rounded-md px-3 py-2 w-full pointer-events-none bg-gray-100"
+													/>
+												</td>
+												<td className="px-3 py-2">
+													<input
+														{...register(`products[${index}].stock`)}
+														defaultValue={field.stock}
+														placeholder="Unit"
 														type="number"
 														max={field.stock} // Set the max attribute to the available stock for the product
 														className="border rounded-md px-3 py-2 w-full"

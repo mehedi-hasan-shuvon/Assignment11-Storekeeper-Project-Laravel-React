@@ -61,7 +61,7 @@ const SaleAddModal = ({ show, toggleModal, sale, auth }) => {
 									<hr />
 									<div className="grid grid-cols-2 gap-4">
 										<p>
-											<span className="font-semibold">Sale ID:</span> {sale.id}
+											<span className="font-semibold">Sale ID:</span> {sale.invoice_id}
 										</p>
 										<p>
 											<span className="font-semibold">Current Date-Time:</span> {moment(new Date()).format('MMMM Do YYYY, h:mm:ss a')}
@@ -134,7 +134,7 @@ const SaleAddModal = ({ show, toggleModal, sale, auth }) => {
 																	(total, saleDetail) =>
 																		total + parseFloat(saleDetail.sale_price) * parseFloat(saleDetail.qty),
 																	0
-																))} 
+																))}
 															</td>
 														</tr>
 														<tr>
@@ -175,8 +175,13 @@ const SaleAddModal = ({ show, toggleModal, sale, auth }) => {
 
 
 												<div className="grid grid-cols-2 gap-4">
-													<p>
-														<span className="font-semibold">Issued By:</span>{auth && auth.user ? auth.user.name : ''} ({auth && auth.user ? auth.user.email : ''})
+												<p className="flex items-center whitespace-nowrap">
+  <span className="font-semibold mr-2">Issued By:</span>
+  {auth && auth.user ? `${auth.user.name} (${auth.user.email})` : ''}
+</p>
+													<p className="flex items-center justify-end">
+														<span className="font-semibold">Powered By:</span>
+														<span className="ml-2">Shop Keeper App</span>
 													</p>
 												</div>
 
