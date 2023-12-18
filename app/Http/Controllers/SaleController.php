@@ -84,21 +84,53 @@ class SaleController extends Controller {
 
     }
 
-    function getSales( Request $request ) {
+    // function getSales( Request $request ) {
 
+    //     $id = $request->id;
+
+    //     $perPage = 5;
+
+    //     $page = $request->page ?? 1;
+
+    //     $offset = ( $page - 1 ) * $perPage;
+
+    //     $totalItems = DB::table( 'invoices' )->where( 'user_id', $id )->count();
+
+    //     $totalPages = ceil( $totalItems / $perPage );
+
+    //     $result = DB::table( 'invoices' )
+    //         ->select(
+    //             'invoices.id as id',
+    //             'invoices.invoice_id as invoice_id',
+    //             'invoices.total as total',
+    //             'invoices.name as customer_name',
+    //             'invoices.address as customer_address',
+    //             'invoices.phone as customer_phone',
+    //             'invoices.discount as discount',
+    //             'invoices.vat as vat',
+    //             'invoices.created_at as created_at' )
+    //         ->where( 'invoices.user_id', $id )
+    //         ->orderByDesc( 'invoices.created_at' )
+    //         ->offset( $offset )
+    //         ->limit( $perPage )
+    //         ->get();
+
+    //     return [
+    //         'data'       => $result,
+    //         'totalPages' => $totalPages,
+    //     ];
+
+    // }
+
+    function getSales(Request $request) {
         $id = $request->id;
-
         $perPage = 5;
-
         $page = $request->page ?? 1;
-
-        $offset = ( $page - 1 ) * $perPage;
-
-        $totalItems = DB::table( 'invoices' )->where( 'user_id', $id )->count();
-
-        $totalPages = ceil( $totalItems / $perPage );
-
-        $result = DB::table( 'invoices' )
+        $keyword = $request->searchTerm; // Retrieve the search term from the request
+    
+        $offset = ($page - 1) * $perPage;
+    
+        $query = DB::table('invoices')
             ->select(
                 'invoices.id as id',
                 'invoices.invoice_id as invoice_id',
@@ -108,19 +140,33 @@ class SaleController extends Controller {
                 'invoices.phone as customer_phone',
                 'invoices.discount as discount',
                 'invoices.vat as vat',
-                'invoices.created_at as created_at' )
-            ->where( 'invoices.user_id', $id )
-            ->orderByDesc( 'invoices.created_at' )
-            ->offset( $offset )
-            ->limit( $perPage )
+                'invoices.created_at as created_at'
+            )
+            ->where('invoices.user_id', $id);
+    
+        if ($keyword) {
+            // Add the keyword search condition
+            $query->where(function ($query) use ($keyword) {
+                $query->where('invoices.invoice_id', 'LIKE', "%$keyword%")
+                    ->orWhere('invoices.name', 'LIKE', "%$keyword%");
+                // Add other columns you want to search against
+            });
+        }
+    
+        $totalItems = $query->count();
+        $totalPages = ceil($totalItems / $perPage);
+    
+        $result = $query->orderByDesc('invoices.created_at')
+            ->offset($offset)
+            ->limit($perPage)
             ->get();
-
+    
         return [
-            'data'       => $result,
+            'data' => $result,
             'totalPages' => $totalPages,
         ];
-
     }
+    
 
     function getSaleDetails( Request $request ) {
 

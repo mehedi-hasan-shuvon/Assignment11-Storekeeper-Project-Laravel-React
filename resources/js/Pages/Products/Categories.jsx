@@ -3,7 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import moment from 'moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAdd, faAngleLeft, faAngleRight, faBan, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faAdd, faAngleLeft, faAngleRight, faBan, faMagnifyingGlass, faPen, faRotateLeft, faTrash } from '@fortawesome/free-solid-svg-icons';
 import DeleteModal from '@/Components/DeleteModal';
 import { ToastContainer, toast } from 'react-toastify';
 import CategoryEditModal from '@/Components/Category/CategoryEditModal';
@@ -31,13 +31,15 @@ const Categories = ({ auth }) => {
 
   const [totalPages, setTotalPages] = useState(1);
 
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const fetchCategories = async (page = 1) => {
+
+  const fetchCategories = async (page = 1, searchTerm = '') => {
     try {
       setIsLoading(true);
       // const response = await axios.get(`/api/getAllCategories/${auth?.user?.id}`); 
       const response = await axios.get(`/api/getCategories/${auth?.user?.id}`, {
-        params: { page },
+        params: { page, searchTerm },
       });
       setCategories(response?.data?.data);
       setTotalPages(response?.data?.totalPages);
@@ -46,6 +48,18 @@ const Categories = ({ auth }) => {
       console.error('Error fetching categories:', error);
     }
   };
+
+  const handleSearch = () => {
+    setCurrentPage(1);
+    fetchCategories(1, searchTerm);
+  
+  };
+
+  const handleReset = () => {
+    setCurrentPage(1);
+    setSearchTerm('');
+    fetchCategories(1,'');
+  }
 
 
 
@@ -151,6 +165,31 @@ const Categories = ({ auth }) => {
                   <FontAwesomeIcon icon={faAdd} />
                 </button>
               </div>
+              <div className='flex flex-row justify-end py-2'>
+                <input
+                  type="text"
+                  placeholder="Search by name..."
+                  value={searchTerm}
+                  onChange={e => setSearchTerm(e.target.value)}
+                  className="border-gray-300 border rounded-md py-1 px-2 mr-2"
+                />
+                <button
+                  onClick={handleSearch}
+                  disabled={!searchTerm.trim()} // Disable button if searchTerm is empty or contains only whitespace
+                  className={`bg-blue-500 text-white px-4 py-2 mr-2 rounded-md flex items-center space-x-2 ${!searchTerm.trim() && 'opacity-50 cursor-not-allowed'}`}
+                >
+                 <FontAwesomeIcon icon={faMagnifyingGlass} />
+                </button>
+
+                <button
+                  onClick={handleReset}
+      
+                  className={`bg-blue-500 text-white px-4 py-2 rounded-md flex items-center space-x-2 }`}
+                >
+                  <FontAwesomeIcon icon={faRotateLeft} />
+                </button>
+
+              </div>
 
               {
                 isLoading ?
@@ -159,7 +198,7 @@ const Categories = ({ auth }) => {
                   </div>
                   : categories?.length > 0 ?
                     (<div className="overflow-x-auto">
-                      
+
 
                       <table className="min-w-full divide-y divide-gray-200 my-5">
                         <thead className="bg-gray-50">
@@ -193,7 +232,7 @@ const Categories = ({ auth }) => {
                             disabled={currentPage === 1}
                             className="px-4 py-2 rounded-md bg-blue-500 text-white disabled:opacity-50 disabled:cursor-not-allowed"
                           >
-                           <FontAwesomeIcon icon={faAngleLeft} />
+                            <FontAwesomeIcon icon={faAngleLeft} />
                           </button>
                           <span>{currentPage}</span>
                           <button
@@ -201,11 +240,11 @@ const Categories = ({ auth }) => {
                             disabled={currentPage === totalPages}
                             className="px-4 py-2 rounded-md bg-blue-500 text-white disabled:opacity-50 disabled:cursor-not-allowed"
                           >
-                          <FontAwesomeIcon icon={faAngleRight} />
+                            <FontAwesomeIcon icon={faAngleRight} />
                           </button>
                         </div>
                       </div>
-                    
+
 
                     </div>) :
                     <div className='flex flex-col items-center justify-center'>

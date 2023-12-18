@@ -3,7 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import { ToastContainer, toast } from 'react-toastify';
 import moment from 'moment';
-import { faAdd, faAngleLeft, faAngleRight, faBan, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faAdd, faAngleLeft, faAngleRight, faBan, faMagnifyingGlass, faPen, faRotateLeft, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ProductAddModal from '@/Components/Product/ProductAddModal';
 import ProductEditModal from '@/Components/Product/ProductEditModal';
@@ -18,18 +18,19 @@ const Products = ({ auth }) => {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(1);
 	const [showDeleteModal, setShowDeleteModalOpen] = useState(false);
+	const [searchTerm, setSearchTerm] = useState('');
 
 
 	const [showEditModal, setShowEditModal] = useState(false);
 
 	const [selectedProduct, setSelectedProduct] = useState({});
 
-	const fetchProducts = async (page = 1) => {
+	const fetchProducts = async (page = 1, searchTerm = '') => {
 		try {
 			setIsLoading(true);
 			// const response = await axios.get(`/api/getAllCategories/${auth?.user?.id}`); 
 			const response = await axios.get(`/api/getProducts/${auth?.user?.id}`, {
-				params: { page },
+				params: { page, searchTerm },
 			});
 			setProducts(response?.data?.data);
 			setTotalPages(response?.data?.totalPages);
@@ -39,6 +40,17 @@ const Products = ({ auth }) => {
 		}
 	};
 
+	const handleSearch = () => {
+		setCurrentPage(1);
+		fetchProducts(1, searchTerm);
+	  
+	  };
+	
+	  const handleReset = () => {
+		setCurrentPage(1);
+		setSearchTerm('');
+		fetchProducts(1,'');
+	  }
 
 
 
@@ -68,13 +80,13 @@ const Products = ({ auth }) => {
 		}
 	}
 
-	const handelEditProductModal = (product) =>{
+	const handelEditProductModal = (product) => {
 		setShowEditModal(true);
 		setSelectedProduct(product);
 
 	}
 
-	const handleEditProduct = async(data) =>{
+	const handleEditProduct = async (data) => {
 		try {
 			console.log(data);
 			const response = await axios.post(`/api/editProduct/${selectedProduct?.id}`, data);
@@ -94,23 +106,23 @@ const Products = ({ auth }) => {
 	const handelDeleteProductModal = (product) => {
 		setShowDeleteModalOpen(true);
 		setSelectedProduct(product);
-	  }
+	}
 
 	const handleDeleteProduct = async () => {
 		try {
 			console.log(selectedProduct);
-		 const response = await axios.delete(`/api/deleteProduct/${selectedProduct?.id}`);
+			const response = await axios.delete(`/api/deleteProduct/${selectedProduct?.id}`);
 
-		 if (response.status === 200) {
-			toast("Product deleted successfully!", { type: "success" });
-			setShowDeleteModalOpen(false);
-			fetchProducts(currentPage);
-		 }
+			if (response.status === 200) {
+				toast("Product deleted successfully!", { type: "success" });
+				setShowDeleteModalOpen(false);
+				fetchProducts(currentPage);
+			}
 		} catch (error) {
-		  toast("Error deleting product!", { type: "error" });
-		  console.error('Error deleting product:', error);
+			toast("Error deleting product!", { type: "error" });
+			console.error('Error deleting product:', error);
 		}
-	  }
+	}
 
 
 
@@ -154,80 +166,107 @@ const Products = ({ auth }) => {
 								</button>
 							</div>
 
+
+							<div className='flex flex-row justify-end py-2'>
+								<input
+									type="text"
+									placeholder="Search by name..."
+									value={searchTerm}
+									onChange={e => setSearchTerm(e.target.value)}
+									className="border-gray-300 border rounded-md py-1 px-2 mr-2"
+								/>
+								<button
+									onClick={handleSearch}
+									disabled={!searchTerm.trim()} // Disable button if searchTerm is empty or contains only whitespace
+									className={`bg-blue-500 text-white px-4 py-2 mr-2 rounded-md flex items-center space-x-2 ${!searchTerm.trim() && 'opacity-50 cursor-not-allowed'}`}
+								>
+									<FontAwesomeIcon icon={faMagnifyingGlass} />
+								</button>
+
+								<button
+									onClick={handleReset}
+
+									className={`bg-blue-500 text-white px-4 py-2 rounded-md flex items-center space-x-2 }`}
+								>
+									<FontAwesomeIcon icon={faRotateLeft} />
+								</button>
+							</div>
+
+
 							{
-                isLoading ?
-                  <div className="flex items-center justify-center mt-4">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-gray-900"></div>
-                  </div>
-                  : products?.length > 0 ?
-                    (<div className="overflow-x-auto">
-                      
+								isLoading ?
+									<div className="flex items-center justify-center mt-4">
+										<div className="animate-spin rounded-full h-12 w-12 border-b-4 border-gray-900"></div>
+									</div>
+									: products?.length > 0 ?
+										(<div className="overflow-x-auto">
 
-                      <table className="min-w-full divide-y divide-gray-200 my-5">
-                        <thead className="bg-gray-50">
-                          <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
-							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">image</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">name</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">price (BDT)</th>
-							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
-							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-							<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
 
-                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                          </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
-                          {products.map((product, index) => (
-                            <tr key={product.id}>
-                              <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
-							  <td className="px-6 py-4 whitespace-nowrap">
-								<img src={`upload_image/${product.img_url}`} alt={product.img_url} className="w-12 h-12 object-cover" />
-							  </td>
+											<table className="min-w-full divide-y divide-gray-200 my-5">
+												<thead className="bg-gray-50">
+													<tr>
+														<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
+														<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">image</th>
+														<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">name</th>
+														<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">price (BDT)</th>
+														<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
+														<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+														<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
 
-                              <td className="px-6 py-4 whitespace-nowrap">{product.name}</td>
-							  <td className="px-6 py-4 whitespace-nowrap">{formatToBanglaNumber(product.price)} </td>
-							  <td className="px-6 py-4 whitespace-nowrap">{product.unit}</td>
-							  <td className="px-6 py-4 whitespace-nowrap">{product.category_name}</td>
-                              <td className="px-6 py-4 whitespace-nowrap">{moment(product.created_at).format('MMMM Do YYYY, h:mm:ss a')}</td>
-                              <td className="px-6 py-4 text-right whitespace-nowrap">
-                                <button onClick={() => handelEditProductModal(product)} className="text-blue-500 mr-2 px-2"><FontAwesomeIcon icon={faPen} /></button>
-                                <button onClick={() => handelDeleteProductModal(product)} className="text-red-500"><FontAwesomeIcon icon={faTrash} /></button>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+														<th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+													</tr>
+												</thead>
+												<tbody className="bg-white divide-y divide-gray-200">
+													{products.map((product, index) => (
+														<tr key={product.id}>
+															<td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
+															<td className="px-6 py-4 whitespace-nowrap">
+																<img src={`upload_image/${product.img_url}`} alt={product.img_url} className="w-12 h-12 object-cover" />
+															</td>
 
-                      <div className="flex justify-end mt-4 space-x-4">
-                        <div className="flex items-center space-x-4">
-                          <p>Total Pages: {totalPages}</p>
-                          <button
-                            onClick={() => handlePageChange(currentPage - 1)}
-                            disabled={currentPage === 1}
-                            className="px-4 py-2 rounded-md bg-blue-500 text-white disabled:opacity-50 disabled:cursor-not-allowed"
-                          >
-                           <FontAwesomeIcon icon={faAngleLeft} />
-                          </button>
-                          <span>{currentPage}</span>
-                          <button
-                            onClick={() => handlePageChange(currentPage + 1)}
-                            disabled={currentPage === totalPages}
-                            className="px-4 py-2 rounded-md bg-blue-500 text-white disabled:opacity-50 disabled:cursor-not-allowed"
-                          >
-                          <FontAwesomeIcon icon={faAngleRight} />
-                          </button>
-                        </div>
-                      </div>
-                    
+															<td className="px-6 py-4 whitespace-nowrap">{product.name}</td>
+															<td className="px-6 py-4 whitespace-nowrap">{formatToBanglaNumber(product.price)} </td>
+															<td className="px-6 py-4 whitespace-nowrap">{product.unit}</td>
+															<td className="px-6 py-4 whitespace-nowrap">{product.category_name}</td>
+															<td className="px-6 py-4 whitespace-nowrap">{moment(product.created_at).format('MMMM Do YYYY, h:mm:ss a')}</td>
+															<td className="px-6 py-4 text-right whitespace-nowrap">
+																<button onClick={() => handelEditProductModal(product)} className="text-blue-500 mr-2 px-2"><FontAwesomeIcon icon={faPen} /></button>
+																<button onClick={() => handelDeleteProductModal(product)} className="text-red-500"><FontAwesomeIcon icon={faTrash} /></button>
+															</td>
+														</tr>
+													))}
+												</tbody>
+											</table>
 
-                    </div>) :
-                    <div className='flex flex-col items-center justify-center'>
-                      {/* <img src={noCategoriesImage} alt="No categories found" className="h-40 w-40 mb-4" /> */}
-                      <FontAwesomeIcon icon={faBan} className="h-40 w-40 mb-4" />
-                      <p className="text-lg font-semibold">No categories found.</p>
-                    </div>
-              }
+											<div className="flex justify-end mt-4 space-x-4">
+												<div className="flex items-center space-x-4">
+													<p>Total Pages: {totalPages}</p>
+													<button
+														onClick={() => handlePageChange(currentPage - 1)}
+														disabled={currentPage === 1}
+														className="px-4 py-2 rounded-md bg-blue-500 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+													>
+														<FontAwesomeIcon icon={faAngleLeft} />
+													</button>
+													<span>{currentPage}</span>
+													<button
+														onClick={() => handlePageChange(currentPage + 1)}
+														disabled={currentPage === totalPages}
+														className="px-4 py-2 rounded-md bg-blue-500 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+													>
+														<FontAwesomeIcon icon={faAngleRight} />
+													</button>
+												</div>
+											</div>
+
+
+										</div>) :
+										<div className='flex flex-col items-center justify-center'>
+											{/* <img src={noCategoriesImage} alt="No categories found" className="h-40 w-40 mb-4" /> */}
+											<FontAwesomeIcon icon={faBan} className="h-40 w-40 mb-4" />
+											<p className="text-lg font-semibold">No categories found.</p>
+										</div>
+							}
 
 
 						</div>
@@ -237,7 +276,7 @@ const Products = ({ auth }) => {
 
 			<DeleteModal show={showDeleteModal} toggleModal={setShowDeleteModalOpen} name={selectedProduct?.name} handleDeleteFunc={handleDeleteProduct} />
 			<ProductAddModal show={showAddModal} toggleModal={setShowAddModal} handelAddFunc={handleAddProduct} auth={auth} />
-			<ProductEditModal show={showEditModal} toggleModal={setShowEditModal} product={selectedProduct} handelEditFunc={handleEditProduct} auth= {auth}/>
+			<ProductEditModal show={showEditModal} toggleModal={setShowEditModal} product={selectedProduct} handelEditFunc={handleEditProduct} auth={auth} />
 		</AuthenticatedLayout>
 	)
 }

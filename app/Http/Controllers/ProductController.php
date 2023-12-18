@@ -56,35 +56,41 @@ class ProductController extends Controller
     }
 
     function getProducts(Request $request){
-
         $id = $request->id;
-
         $perPage = 5;
-
         $page = $request->page ?? 1;
-
-        $offset = ( $page - 1 ) * $perPage;
-
-        $totalItems = DB::table('products')->where('user_id', $id)->count();
-
-        $totalPages = ceil($totalItems / $perPage);
-
-        //
-        $result = DB::table('products')
+        $keyword = $request->searchTerm; // Retrieve the search term from the request
+    
+        $offset = ($page - 1) * $perPage;
+    
+        $query = DB::table('products')
             ->join('categories', 'products.category_id', '=', 'categories.id')
-            ->select('products.*', 'categories.name as category_name') // Fetching specific fields from both tables
-            ->where('products.user_id', $id)
-            ->offset($offset)
-            ->limit($perPage)
-            ->get();
-
+            ->select('products.*', 'categories.name as category_name')
+            ->where('products.user_id', $id);
+    
+        if ($keyword) {
+            // Add the keyword search condition
+            $query->where(function ($query) use ($keyword) {
+                $query->where('products.name', 'LIKE', "%$keyword%")
+                      ->orWhere('categories.name', 'LIKE', "%$keyword%");
+                // Add other columns you want to search against
+            });
+        }
+    
+        $totalItems = $query->count();
+        $totalPages = ceil($totalItems / $perPage);
+    
+        $result = $query->orderByDesc('products.created_at')
+                        ->offset($offset)
+                        ->limit($perPage)
+                        ->get();
+    
         return [
-                'data' => $result,
-                'totalPages' => $totalPages,
+            'data' => $result,
+            'totalPages' => $totalPages,
         ];
-
-
     }
+    
 
 
     function getAllProducts (Request $request){

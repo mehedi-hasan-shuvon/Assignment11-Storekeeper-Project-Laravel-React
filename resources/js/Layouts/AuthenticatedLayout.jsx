@@ -5,7 +5,7 @@ import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCoffee, faBars, faAngleDown, faAngleUp, faFolderTree, faBoxOpen, faCartShopping } from '@fortawesome/free-solid-svg-icons';
+import { faCoffee, faBars, faAngleDown, faAngleUp, faFolderTree, faBoxOpen, faCartShopping, faUser, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(true);
@@ -117,11 +117,11 @@ export default function Authenticated({ user, header, children }) {
                     {showSubMenu && (
                         <div className="pl-4 mt-2 space-y-2 flex flex-col">
                             <NavLink href={route('profile.edit')}>
-                                <FontAwesomeIcon icon={faCoffee} />
+                                <FontAwesomeIcon icon={faUser} />
                                 <p className='px-2 text-lg'>Profile</p>
                             </NavLink>
                             <NavLink href={route('logout')} method="post" as="button">
-                                <FontAwesomeIcon icon={faCoffee} />
+                                <FontAwesomeIcon icon={faRightFromBracket} />
                                 <p className='px-2 text-lg'>Logout</p>
                             </NavLink>
                         </div>
