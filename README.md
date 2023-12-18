@@ -17,3 +17,7 @@ How to set up:
 - run ```npm install``` to install the libraries
 - run ```npm run dev``` to run the react server
 - lastly, run ```php artisan serve``` to run the project
+
+## Demo Video Link
+
+[Link to Demo Video](https://github.com/mehedi-hasan-shuvon/Assignment11-Storekeeper-Project-Laravel-React)
