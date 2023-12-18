@@ -20,4 +20,4 @@ How to set up:
 
 ## Demo Video Link
 
-[Link to Demo Video](https://github.com/mehedi-hasan-shuvon/Assignment11-Storekeeper-Project-Laravel-React)
+[Link to Demo Video](https://youtu.be/O61HZBsKXkM?si=RAT24_CJ9VAKD01n)
