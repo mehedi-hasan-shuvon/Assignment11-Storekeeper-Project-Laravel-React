@@ -28,9 +28,7 @@ const CreateSales = ({ auth }) => {
 	const saveSales = async (data) => {
 
 		try {
-			console.log(data);
 			const response = await axios.post(`/api/saveSales/${auth?.user?.id}`, data);
-			console.log(response);
 			if (response.status === 200) {
 				toast("Sales added successfully!", { type: "success" });
 				setTimeout(() => {
@@ -49,7 +47,6 @@ const CreateSales = ({ auth }) => {
 	const fetchAllProducts = async () => {
 		try {
 			const response = await axios.get(`/api/getAllProducts/${auth?.user?.id}`);
-			console.log(response?.data);
 			setProductList(response?.data);
 		} catch (error) {
 			console.error('Error fetching categories:', error);
@@ -66,6 +63,7 @@ const CreateSales = ({ auth }) => {
 
 		)();
 	}, []);
+	
 
 	return (
 		<AuthenticatedLayout
@@ -183,6 +181,7 @@ const CreateSales = ({ auth }) => {
 															);
 															setValue(`products[${index}].price`, selectedProduct?.price || '');
 															setValue(`products[${index}].stock`, selectedProduct?.unit || '');
+															setValue(`products[${index}].originalStock`, selectedProduct?.unit || '');
 														}}
 													>
 														<option value="">Select a product</option>
@@ -208,7 +207,7 @@ const CreateSales = ({ auth }) => {
 												<td className="px-3 py-2">
 													<input
 														readOnly
-														{...register(`products[${index}].stock`)}
+														{...register(`products[${index}].originalStock`)}
 														defaultValue={field.stock}
 														placeholder="Stock Available"
 														type="number"
@@ -243,6 +242,7 @@ const CreateSales = ({ auth }) => {
 									<button
 										type="button"
 										onClick={() => append({ product: '', price: '', stock: '' })}
+										
 										className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
 									>
 										Add Product
