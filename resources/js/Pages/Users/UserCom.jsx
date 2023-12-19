@@ -10,7 +10,7 @@ const UserCom = ({ auth}) => {
         const fetchUsers = async () => {
             try {
                 const response = await axios.get('/api/getAllUsers'); // Replace with your API endpoint
-				console.log(response);
+
 
             } catch (error) {
                 console.error('Error fetching users:', error);

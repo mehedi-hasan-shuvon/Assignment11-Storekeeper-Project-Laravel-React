@@ -61,7 +61,7 @@ const Products = ({ auth }) => {
 
 	const handleAddProduct = async (data) => {
 		try {
-			console.log(data);
+
 			const response = await axios.post(`/api/addProduct/${auth?.user?.id}`, data, {
 				headers: {
 					'Content-Type': 'multipart/form-data', // Important for file upload
@@ -88,7 +88,7 @@ const Products = ({ auth }) => {
 
 	const handleEditProduct = async (data) => {
 		try {
-			console.log(data);
+
 			const response = await axios.post(`/api/editProduct/${selectedProduct?.id}`, data);
 			if (response.status === 200) {
 				toast("Product updated successfully!", { type: "success" });
@@ -110,7 +110,7 @@ const Products = ({ auth }) => {
 
 	const handleDeleteProduct = async () => {
 		try {
-			console.log(selectedProduct);
+
 			const response = await axios.delete(`/api/deleteProduct/${selectedProduct?.id}`);
 
 			if (response.status === 200) {
